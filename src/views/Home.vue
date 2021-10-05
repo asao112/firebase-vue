@@ -26,8 +26,9 @@
 </template>
 
 <script>
-import firebase from 'firebase';
+//import firebase from 'firebase';
 export default {
+  name: 'Register',
   data() {
     return {
       username: '',
@@ -36,14 +37,15 @@ export default {
     };
   },
   methods: {
+    
     register() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .catch(error => {
-          alert(error.message);
-        });
+      this.$store.dispatch('register', {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      })
     }
+    
   }
 };
 </script>
