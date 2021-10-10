@@ -5,15 +5,15 @@
       <ul>
         <li>
           <label for="email">メールアドレス</label>
-          <input type="email" id="email" placeholder="E-mail" v-model="LoginEmail" />
+          <input type="email" id="email" placeholder="E-mail" v-model="loginEmail" />
         </li>
         <li>
           <label for="password">パスワード</label>
-          <input type="password" id="password" placeholder="PassWord" v-model="LoginPassword" />
+          <input type="password" id="password" placeholder="PassWord" v-model="loginPassword" />
         </li>
       </ul>
     </form>
-    <button class="button is-info is-outlined" @click="LoginUser">ログイン</button>
+    <button class="button is-info is-outlined" @click="loginUser">ログイン</button>
     <br />
     <router-link to="/">新規登録はこちらから</router-link> 
   </div>
@@ -23,15 +23,15 @@ export default {
   name: 'singin',
   data() {
     return {
-      LoginEmail: '',
-      LoginPassword: ''
+      loginEmail: '',
+      loginPassword: ''
     };
   },
   methods: {
-    LoginUser() {
-      this.$store.dispatch('LoginUser', {
-        LoginEmail: this.LoginEmail, 
-        LoginPassword: this.LoginPassword
+    loginUser() {
+      this.$store.dispatch('loginUser', {
+        loginEmail: this.loginEmail, 
+        loginPassword: this.loginPassword
       })
     }
   }

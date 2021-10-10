@@ -10,8 +10,8 @@ export default new Vuex.Store({
     username: '',
     email: '',
     password: '',
-    LoginEmail: '',
-    LoginPassword: ''
+    loginEmail: '',
+    loginPassword: ''
   },
   mutations: {
     registerState(state, payload) {
@@ -20,8 +20,8 @@ export default new Vuex.Store({
       state.password = payload.password
     },
     loginState(state, payload) {
-      state.LoginEmail = payload.LoginEmail
-      state.LoginPassword = payload.LoginPassword
+      state.loginEmail = payload.loginEmail
+      state.loginPassword = payload.loginPassword
     }
   },
   actions: {
@@ -39,14 +39,15 @@ export default new Vuex.Store({
         console.error('エラー :', e.message)
       })
     },
-    LoginUser(context, payload) {
+    loginUser(context, payload) {
       firebase
       .auth()
-      .signInWithEmailAndPassword(payload.LoginEmail, payload.LoginPassword)
+      .signInWithEmailAndPassword(payload.loginEmail, payload.loginPassword)
       .then(() => {
         context.commit('loginState', payload)
       })
       .then(() => {
+        alert("ログイン成功!");
         router.push('/about');
       })
       .catch((e) => {
