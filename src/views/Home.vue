@@ -1,11 +1,10 @@
 <template>
   <div>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h1>新規登録画面</h1>
+    <h1 class="title">新規登録画面</h1>
     <form>
       <ul>
         <li class="user-name">
-          <label for="user-name">ユーザー名</label>
+          <label for="user-name">ユーザ名</label>
           <input type="text" id="user-name" placeholder="UserName" v-model="username" />
         </li>
         <li class="email">
@@ -18,13 +17,11 @@
         </li>
       </ul>
     </form>
-
-    <button @click="register">新規登録</button>
+    <button class="button is-info is-outlined" @click="newRegister">新規登録</button>
     <br />
-    <router-link to="/">ログインはこちらから</router-link>
+    <router-link to="/login">ログインはこちらから</router-link>
   </div>
 </template>
-
 <script>
 //import firebase from 'firebase';
 export default {
@@ -33,19 +30,18 @@ export default {
     return {
       username: '',
       email: '',
-      password: ''
+      password: '',
     };
   },
   methods: {
-    
-    register() {
-      this.$store.dispatch('register', {
+    newRegister() {
+      this.$store.dispatch('newRegister', {
         username: this.username,
         email: this.email,
         password: this.password,
       })
-    }
-    
+    },
   }
 };
 </script>
+
