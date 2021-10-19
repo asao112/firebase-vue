@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user">
     <h1 class="title">ログイン画面</h1>
     <form>
       <ul>

@@ -11,7 +11,7 @@ export default new Vuex.Store({
     email: '',
     password: '',
     loginEmail: '',
-    loginPassword: ''
+    loginPassword: '',
   },
   mutations: {
     registerState(state, payload) {
@@ -22,7 +22,7 @@ export default new Vuex.Store({
     loginState(state, payload) {
       state.loginEmail = payload.loginEmail
       state.loginPassword = payload.loginPassword
-    }
+    },
   },
   actions: {
     newRegister(context, payload) {
@@ -30,10 +30,15 @@ export default new Vuex.Store({
       .auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(() => {
+        firebase.auth().currentUser.updateProfile({
+          displayName: payload.username,
+        },)
+      .then(() => {
         context.commit('registerState', payload)
-      })
+      })  
       .then(() => {
         router.push('/about')
+      })
       })
       .catch((e) => {
         console.error('エラー :', e.message)

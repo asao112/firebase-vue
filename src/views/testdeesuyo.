@@ -1,0 +1,256 @@
+<template>
+  <div class="login-user">
+    <div>
+      <span>{{userName}}さんようこそ！</span>
+      <span>残高 : 1000</span>
+      <button class="login-btn button is-info"><router-link to="/login">ログアウト</router-link></button>
+    </div>
+    <h1 class="title">ユーザー覧</h1>
+    <div class="userName">
+      <h4 class="subtitle1">ユーザ名</h4>
+      <form class="userlist">
+        <ul>
+          <li>
+            <span v-for="(user, index) in userData" :key="index">{{user.username}}</span>
+            <button>walletを見る</button>
+            <button>送る</button>
+          </li>
+        </ul>
+      </form>
+    </div>
+  </div>
+</template>
+<script>
+import firebase from 'firebase';
+export default {
+  data() {
+    return {
+      userName: '',
+      userData: [],
+    };
+  },
+  computed: {
+    username() {
+      return this.getters.username;
+    }
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      this.userName = user.displayName
+    }
+  });
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log('true');
+    } else {
+      location.href = '/login'
+    }
+  const currentUser = firebase.auth().currentUser;
+  this.uid = currentUser.uid;
+  firebase.firestore()
+  .collection('userData')
+  .where(firebase.firestore.FieldPath.documentId(), currentUser.uid)
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      let data = {
+        username: doc.data().username
+      };
+      this.userData.push(data);
+      });
+    });
+    })
+  }
+};
+</script>
+
+
+<template>
+  <div class="User">
+    <h1 class="title">新規登録画面</h1>
+    <form>
+      <ul>
+        <li class="user-name">
+          <label for="user-name">ユーザ名</label>
+          <input type="text" id="user-name" placeholder="UserName" v-model="username" />
+        </li>
+        <li class="email">
+          <label for="email">メールアドレス</label>
+          <input type="email" id="email" placeholder="E-mail" v-model="email" />
+        </li>
+        <li class="password">
+          <label for="password">パスワード</label>
+          <input type="password" id="password" placeholder="PassWord" v-model="password" />
+        </li>
+      </ul>
+    </form>
+    <button class="button is-info is-outlined" @click="newRegister">新規登録</button>
+    <br />
+    <router-link to="/login">ログインはこちらから</router-link>
+  </div>
+</template>
+<script>
+//import firebase from 'firebase';
+export default {
+  name: 'Register',
+  data() {
+    return {
+      username: '',
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    newRegister() {
+      this.$store.dispatch('newRegister', {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      })
+    },
+  }
+};
+</script>
+
+<template>
+  <div class="user">
+    <h1 class="title">ログイン画面</h1>
+    <form>
+      <ul>
+        <li>
+          <label for="email">メールアドレス</label>
+          <input type="email" id="email" placeholder="E-mail" v-model="loginEmail" />
+        </li>
+        <li>
+          <label for="password">パスワード</label>
+          <input type="password" id="password" placeholder="PassWord" v-model="loginPassword" />
+        </li>
+      </ul>
+    </form>
+    <button class="button is-info is-outlined" @click="loginUser">ログイン</button>
+    <br />
+    <router-link to="/">新規登録はこちらから</router-link> 
+  </div>
+</template>
+<script>
+export default {
+  name: 'singin',
+  data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+  methods: {
+    loginUser() {
+      this.$store.dispatch('loginUser', {
+        email: this.email, 
+        password: this.password
+      })
+    }
+  }
+};
+</script>
+
+import Vue from 'vue'
+import Vuex from 'vuex'
+import firebase from 'firebase'
+import router from '@/router'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state: {
+    user: {
+      username: '',
+      email: '',
+      password: '',
+    },
+    users: [],
+  },
+  getters: {
+    email(state) {
+      return state.user.email;
+    },
+    password(state) {
+      return state.user.password;
+    },
+    username(state) {
+      return state.user.username;
+    },
+    users(state) {
+      return state.users
+    },
+  },
+  mutations: {
+    registerState(state, payload) {
+      state.user.username = payload.username
+      state.user.email = payload.email
+      state.user.password = payload.password
+    },
+    loginUserData(state, doc) {
+      state.user.username = doc.date().username
+    },
+    loginUsersData(state, users) {
+      state.users = users
+    },
+  },
+  actions: {
+    newRegister(context, payload) {
+      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+        .then(() => {
+          const user = firebase.auth().currentUser
+          user.updateProfile({
+            displayName: payload.username,
+          },
+          )
+            .then(() => {
+              const db = firebase.firestore();
+              db.collection("userData").doc(user.uid).set({
+                uid: user.uid,
+                email: payload.email,
+                password: payload.password,
+                username: payload.username,
+              })
+            })
+            .then(() => {
+              context.commit('registerState', payload)
+            })
+            .then(() => {
+              router.push('/about')
+            })
+        })
+        .catch((e) => {
+          console.error('エラー :', e.message)      
+        });
+    },
+
+    loginUser(context, payload) {
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(payload.email, payload.password)
+      .then(() => {
+        const user = firebase.auth().currentUser
+        const docRef = firebase.firestore().collection("userData").doc(user.uid);
+        docRef.get()
+      .then((doc) => {
+        if (doc.exists) {
+          context.commit('loginUserData', doc)
+        } else {
+          console.log();
+        }
+      })
+      .then(() => {
+        alert("ログイン成功!");
+        router.push('/about');
+      })
+      .catch((e) => {
+        console.error('エラー :', e.message)      
+      });
+      })
+    }
+  },
+  modules: {
+  }
+})
