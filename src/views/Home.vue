@@ -1,11 +1,11 @@
 <template>
-  <div class="User">
+  <div>
     <h1 class="title">新規登録画面</h1>
     <form>
       <ul>
         <li class="user-name">
           <label for="user-name">ユーザ名</label>
-          <input type="text" id="user-name" placeholder="UserName" v-model="username" />
+          <input type="text" id="user-name" placeholder="UserName" v-model="user" />
         </li>
         <li class="email">
           <label for="email">メールアドレス</label>
@@ -28,7 +28,7 @@ export default {
   name: 'Register',
   data() {
     return {
-      username: '',
+      user: '',
       email: '',
       password: '',
     };
@@ -36,10 +36,11 @@ export default {
   methods: {
     newRegister() {
       this.$store.dispatch('newRegister', {
-        username: this.username,
+        user: this.user,
         email: this.email,
         password: this.password,
-      })
+      },
+      )
     },
   }
 };
