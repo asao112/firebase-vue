@@ -4,8 +4,8 @@
     <form>
       <ul>
         <li class="user-name">
-          <label for="user-name">ユーザ名</label>
-          <input type="text" id="user-name" placeholder="UserName" v-model="user" />
+          <label for="username">ユーザ名</label>
+          <input type="text" id="username" placeholder="UserName" v-model="username" />
         </li>
         <li class="email">
           <label for="email">メールアドレス</label>
@@ -28,7 +28,7 @@ export default {
   name: 'Register',
   data() {
     return {
-      user: '',
+      username: '',
       email: '',
       password: '',
     };
@@ -36,7 +36,7 @@ export default {
   methods: {
     newRegister() {
       this.$store.dispatch('newRegister', {
-        user: this.user,
+        username: this.username,
         email: this.email,
         password: this.password,
       },
@@ -45,4 +45,3 @@ export default {
   }
 };
 </script>
-

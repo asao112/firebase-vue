@@ -20,7 +20,7 @@ export default new Vuex.Store({
   state: initialState,
   mutations: {
     registerState(state, payload) {
-      state.user = payload.user
+      state.username = payload.username
       state.email = payload.email
       state.password = payload.password
     },
@@ -29,12 +29,16 @@ export default new Vuex.Store({
       state.loginPassword = payload.loginPassword
     },
     setUser(state, payload) {
-      state.user = payload.user
+      state.username = payload.username
     }
   },
   actions: {
-    setUser() {
-      console.log('こんにちは')
+    setUser(context, payload) {
+      firebase.auth().onAuthStateChanged((username) => {
+        payload.username = username.displayName;
+      })
+      console.log(payload)
+      context.commit('setUser', payload)
     },
     newRegister(context, payload) {
       firebase
@@ -42,14 +46,21 @@ export default new Vuex.Store({
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(() => {
         firebase.auth().currentUser.updateProfile({
-          displayName: payload.user,
+          displayName: payload.username,
         },)
-      .then(() => {
-        context.commit('registerState', payload)
-      })  
-      .then(() => {
-        router.push('/about')
-      })
+        .then(() => {
+          const db = firebase.firestore();
+          db.collection('user').add({
+            username: payload.username,
+            namber: firebase.firestore.Timestamp.fromDate(new Date())
+          })
+        })
+        .then(() => {
+          context.commit('registerState', payload)
+        })  
+        .then(() => {
+          router.push('/about')
+        })
       })
       .catch((e) => {
         console.error('エラー :', e.message)
@@ -63,8 +74,22 @@ export default new Vuex.Store({
         context.commit('loginState', payload)
       })
       .then(() => {
-        alert("ログイン成功!");
-        router.push('/about');
+        firebase.auth().currentUser.updateProfile({
+          displayName: payload.username,
+        },)
+        .then(() => {
+          firebase.auth().onAuthStateChanged(async (username) => {
+            // ログイン時
+            if (username) {
+              // ログイン済みのユーザー情報があるかをチェック
+              await firebase.firestore().collection('user').doc(payload.username).get()
+            }
+          });
+        })
+        .then(() => {
+          alert("ログイン成功!");
+          router.push('/about');
+        })
       })
       .catch((e) => {
         console.error('エラー :', e.message)
@@ -73,3 +98,6 @@ export default new Vuex.Store({
   },
   plugins: [createPersistedState()]
 })
+
+
+
