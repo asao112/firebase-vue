@@ -9,8 +9,6 @@ const initialState = {
   username: '',
   email: '',
   password: '',
-  loginEmail: '',
-  loginPassword: '',
   loggedIn: false,
 }
 
@@ -25,6 +23,7 @@ export default new Vuex.Store({
       state.password = payload.password
     },
     loginState(state, payload) {
+      state.username = payload.username
       state.loginEmail = payload.loginEmail
       state.loginPassword = payload.loginPassword
     },
@@ -33,13 +32,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    /*actions経由での記述がやはりわかりませんでした。
     setUser(context, payload) {
       firebase.auth().onAuthStateChanged((username) => {
         payload.username = username.displayName;
       })
       console.log(payload)
-      context.commit('setUser', payload)
+      context.commit('registerState', payload)
     },
+    */
     newRegister(context, payload) {
       firebase
       .auth()
@@ -51,7 +52,7 @@ export default new Vuex.Store({
         .then(() => {
           const db = firebase.firestore();
           db.collection('user').add({
-            username: payload.username,
+            usernames: payload.username,
             namber: firebase.firestore.Timestamp.fromDate(new Date())
           })
         })
@@ -60,8 +61,7 @@ export default new Vuex.Store({
         })  
         .then(() => {
           router.push('/about')
-        })
-      })
+        })})
       .catch((e) => {
         console.error('エラー :', e.message)
       })
@@ -69,27 +69,13 @@ export default new Vuex.Store({
     loginUser(context, payload) {
       firebase
       .auth()
-      .signInWithEmailAndPassword(payload.loginEmail, payload.loginPassword)
+      .signInWithEmailAndPassword(payload.email, payload.password)
       .then(() => {
         context.commit('loginState', payload)
       })
       .then(() => {
-        firebase.auth().currentUser.updateProfile({
-          displayName: payload.username,
-        },)
-        .then(() => {
-          firebase.auth().onAuthStateChanged(async (username) => {
-            // ログイン時
-            if (username) {
-              // ログイン済みのユーザー情報があるかをチェック
-              await firebase.firestore().collection('user').doc(payload.username).get()
-            }
-          });
-        })
-        .then(() => {
-          alert("ログイン成功!");
-          router.push('/about');
-        })
+        alert("ログイン成功!");
+        router.push('/about');
       })
       .catch((e) => {
         console.error('エラー :', e.message)

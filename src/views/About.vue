@@ -1,7 +1,7 @@
 <template>
   <div class="login-user">
     <ul>
-      <li class="userList" v-for="(user,index) in userData" :key="index">{{ user.username }}さんようこそ</li>
+      <li class="userList">{{username}}さんようこそ</li>
       <span class="balance">残高 : 1000</span>
       <button class="login-btn button is-info"><router-link to="/login">ログアウト</router-link></button>
     </ul>
@@ -10,19 +10,9 @@
       <h4 class="subtitle1">ユーザ名</h4>
       <form class="userlist">
         <ul>
-          <li>
-            <span></span>
+          <li class="userList" v-for="(user,index) in userData" :key="index">
+            <span>{{ user.usernames }}</span>
             <button>walletを見る</button>
-            <button>送る</button>
-          </li>
-          <li>
-            <span></span>
-            <button>walletを見る</button>
-            <button>送る</button>
-          </li>
-          <li>
-            <span></span>
-            <button >walletを見る</button>
             <button>送る</button>
           </li>
         </ul>
@@ -42,7 +32,7 @@ export default {
   },
   mounted() {
     const db = firebase.firestore()
-    db.collection('user').orderBy('namber', 'desc').limit(1)
+    db.collection('user').orderBy('namber', 'desc').limit(5)
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -54,10 +44,17 @@ export default {
     .catch((error) => {
         console.log("Error getting documents: ", error);
     });
+    /*
     console.log(this.username)
     this.$store.dispatch('setUser', {
       username: this.username
     },)
+    */
+    firebase.auth().onAuthStateChanged((username)=> {
+    if (username) {
+      this.username = username.displayName
+    }
+    });
   }
 };
 </script>
