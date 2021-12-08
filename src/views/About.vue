@@ -11,7 +11,7 @@
       <form class="userlist">
         <ul>
           <li class="userList" v-for="(user,index) in userData" :key="index">
-            <span>{{ user.usernames }}</span>
+            <span>{{ user.username }}</span>
             <button>walletを見る</button>
             <button>送る</button>
           </li>
@@ -26,11 +26,15 @@ import 'firebase/firestore';
 export default {
   data() {
     return {
-      username: '',
       userData: []
     }
   },
-  mounted() {
+  computed: {
+    username() {
+      return this.$store.getters.setUsername
+    }
+  },
+  created() {
     const db = firebase.firestore()
     db.collection('user').orderBy('namber', 'desc').limit(5)
     .get()
@@ -44,17 +48,10 @@ export default {
     .catch((error) => {
         console.log("Error getting documents: ", error);
     });
-    /*
     console.log(this.username)
     this.$store.dispatch('setUser', {
       username: this.username
     },)
-    */
-    firebase.auth().onAuthStateChanged((username)=> {
-    if (username) {
-      this.username = username.displayName
-    }
-    });
   }
 };
 </script>

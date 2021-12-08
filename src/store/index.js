@@ -16,6 +16,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: initialState,
+  getters: {
+    setUsername(state) {
+      return state.username
+    }
+  },
   mutations: {
     registerState(state, payload) {
       state.username = payload.username
@@ -24,36 +29,34 @@ export default new Vuex.Store({
     },
     loginState(state, payload) {
       state.username = payload.username
-      state.loginEmail = payload.loginEmail
-      state.loginPassword = payload.loginPassword
+      state.email = payload.email
+      state.password = payload.password
     },
-    setUser(state, payload) {
-      state.username = payload.username
-    }
   },
   actions: {
-    /*actions経由での記述がやはりわかりませんでした。
-    setUser(context, payload) {
+    setUser() {
       firebase.auth().onAuthStateChanged((username) => {
-        payload.username = username.displayName;
+        this.state.username = username.displayName;
       })
-      console.log(payload)
-      context.commit('registerState', payload)
     },
-    */
     newRegister(context, payload) {
       firebase
       .auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(() => {
-        firebase.auth().currentUser.updateProfile({
+        const user = firebase.auth().currentUser
+        user.updateProfile({
           displayName: payload.username,
         },)
         .then(() => {
+          // データベースへ登録
           const db = firebase.firestore();
-          db.collection('user').add({
-            usernames: payload.username,
-            namber: firebase.firestore.Timestamp.fromDate(new Date())
+          db.collection("user").doc(user.uid).set({
+              uid: user.uid,
+              email: payload.email,
+              password: payload.password,
+              username: payload.username,
+              namber: firebase.firestore.Timestamp.fromDate(new Date())
           })
         })
         .then(() => {
