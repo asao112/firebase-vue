@@ -10,8 +10,8 @@
       <h4 class="subtitle1">ユーザ名</h4>
       <form class="userlist">
         <ul>
-          <li class="userList" v-for="(user,index) in userData" :key="index">
-            <span>{{ user.username }}</span>
+          <li class="userList" v-for="users in usernames" :key="users">
+            <span>{{ users }}</span>
             <button>walletを見る</button>
             <button>送る</button>
           </li>
@@ -21,37 +21,23 @@
   </div>
 </template>
 <script>
-import firebase from 'firebase'
-import 'firebase/firestore';
+//import firebase from 'firebase'
 export default {
-  data() {
-    return {
-      userData: []
-    }
-  },
   computed: {
     username() {
       return this.$store.getters.setUsername
+    },
+    usernames() {
+      return this.$store.getters.setUsers
     }
   },
   created() {
-    const db = firebase.firestore()
-    db.collection('user').orderBy('namber', 'desc').limit(5)
-    .get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.data());
-            this.userData.push(doc.data())
-        });
-    })
-    .catch((error) => {
-        console.log("Error getting documents: ", error);
-    });
     console.log(this.username)
     this.$store.dispatch('setUser', {
-      username: this.username
+      username: this.username,
+      usernames: this.usernames
     },)
+    console.log(this.usernames)
   }
 };
 </script>
