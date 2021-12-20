@@ -43,7 +43,7 @@ span:first-child {
     margin-top: 70px;
 }
 h4 {
-    margin-right: 450px;
+    margin-right: 400px;
     margin-top: 50px;
 }
 .logOut > span{
@@ -55,10 +55,11 @@ h4 {
 }
 .subtitle1 {
     font-weight: bold;
-    margin-left: 120px;
+    margin-right: 10px;
 }
 .userlist > ul > li {
-    margin-top: -18px;
+    margin-top: -20px;
+    margin-right: -400px;
 }
 .userlist > ul > li > span {
     font-weight: lighter;
@@ -66,4 +67,7 @@ h4 {
 .login-btn {
     margin-right: -400px;
     margin-top: -8px;
+}
+.userButton {
+    margin-top: 30px;
 }

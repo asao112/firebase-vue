@@ -10,9 +10,9 @@
       <h4 class="subtitle1">ユーザ名</h4>
       <form class="userlist">
         <ul>
-          <li class="userList" v-for="users in usernames" :key="users">
-            <span>{{ users }}</span>
-            <button>walletを見る</button>
+          <li class="userList" v-for="user in usernames" :key="user">
+            <span>{{ user }}</span>
+            <button class="userButton">walletを見る</button>
             <button>送る</button>
           </li>
         </ul>
@@ -21,7 +21,6 @@
   </div>
 </template>
 <script>
-//import firebase from 'firebase'
 export default {
   computed: {
     username() {

@@ -7,7 +7,7 @@ import createPersistedState from 'vuex-persistedstate'
 //りローしてもデータを保持する
 const initialState = {
   username: '',
-  users: [],
+  userNames: [],
   email: '',
   password: '',
   loggedIn: false,
@@ -22,7 +22,7 @@ export default new Vuex.Store({
       return state.username
     },
     setUsers(state) {
-      return state.users
+      return state.userNames
     }
   },
   mutations: {
@@ -49,14 +49,14 @@ export default new Vuex.Store({
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.get('username'))
-          this.state.users.push(doc.get('username')) 
-          console.log(this.state.users)
+          this.state.userNames.push(doc.get('username')) 
+          console.log(this.state.userNames)
         });
       })
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
-      console.log(this.state.users)
+      console.log(this.state.userNames)
     },
     newRegister(context, payload) {
       firebase
@@ -106,6 +106,7 @@ export default new Vuex.Store({
   },
   plugins: [createPersistedState()]
 })
+
 
 
 
