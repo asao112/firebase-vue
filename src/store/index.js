@@ -38,6 +38,17 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    /*
+    signOut() {
+      firebase.auth().signOut()
+      .then(() => {
+        console.log('ログアウトしました')
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+    },
+    */
     setUser() {
       const db = firebase.firestore()
       firebase.auth().onAuthStateChanged((username) => {
@@ -96,7 +107,7 @@ export default new Vuex.Store({
         context.commit('loginState', payload)
       })
       .then(() => {
-        alert("ログイン成功!");
+        console.log("ログイン成功!");
         router.push('/about');
       })
       .catch((e) => {
