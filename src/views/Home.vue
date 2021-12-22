@@ -4,8 +4,8 @@
     <form>
       <ul>
         <li class="user-name">
-          <label for="user-name">ユーザ名</label>
-          <input type="text" id="user-name" placeholder="UserName" v-model="username" />
+          <label for="username">ユーザ名</label>
+          <input type="text" id="username" placeholder="UserName" v-model="username" />
         </li>
         <li class="email">
           <label for="email">メールアドレス</label>
@@ -23,7 +23,6 @@
   </div>
 </template>
 <script>
-//import firebase from 'firebase';
 export default {
   name: 'Register',
   data() {
@@ -39,9 +38,9 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-      })
+      },
+      )
     },
   }
 };
 </script>
-

@@ -2,20 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import firebase from 'firebase'
+import firebase from 'firebase/app';
+import '@firebase/auth';
 
 Vue.config.productionTip = false
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDgzxSSRfb6A04H8I8-AKGUmYR3AgNseKs",
-  authDomain: "fire-467a2.firebaseapp.com",
-  databaseURL: "https://fire-467a2-default-rtdb.firebaseio.com",
-  projectId: "fire-467a2",
-  storageBucket: "fire-467a2.appspot.com",
-  messagingSenderId: "850942250799",
-  appId: "1:850942250799:web:ad06939ea285fd652b5bda",
-  measurementId: "G-QXLZ6RGPWF"
+  apiKey: "AIzaSyCIZ2PWK2_0BOJltE3BAqCv6hici2FQnpo",
+  authDomain: "vueis-d5266.firebaseapp.com",
+  projectId: "vueis-d5266",
+  storageBucket: "vueis-d5266.appspot.com",
+  messagingSenderId: "108763436197",
+  appId: "1:108763436197:web:1fd3e3088939724b69e94c",
+  measurementId: "G-LK31PBZQ4R"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -25,3 +25,4 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+

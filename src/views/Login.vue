@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="user">
     <h1 class="title">ログイン画面</h1>
     <form>
       <ul>
         <li>
           <label for="email">メールアドレス</label>
-          <input type="email" id="email" placeholder="E-mail" v-model="loginEmail" />
+          <input type="email" id="email" placeholder="E-mail" v-model="email" />
         </li>
         <li>
           <label for="password">パスワード</label>
-          <input type="password" id="password" placeholder="PassWord" v-model="loginPassword" />
+          <input type="password" id="password" placeholder="PassWord" v-model="password" />
         </li>
       </ul>
     </form>
@@ -23,15 +23,15 @@ export default {
   name: 'singin',
   data() {
     return {
-      loginEmail: '',
-      loginPassword: ''
+      email: '',
+      password: ''
     };
   },
   methods: {
     loginUser() {
       this.$store.dispatch('loginUser', {
-        loginEmail: this.loginEmail, 
-        loginPassword: this.loginPassword
+        email: this.email, 
+        password: this.password
       })
     }
   }
